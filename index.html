@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body ng-controller='hi'>
+
+<h3>LocalForage Basic</h3>	 
+<br>
+<input type="text" ng-model='name'>
+<button ng-click='save(name)'>submit</button>
+<br><br> 
+length: {{storedData.length}} <br>
+<br>
+<button ng-click='insert()'>Insert</button> Put the Data into localForage.<br>
+<br>
+<button ng-click='clear()'>Clear</button> Clear whole localForage.<br>
+<br><button ng-click='get()'>get</button> Get the Data from somewhere.
+<br><br><br>
+DB length: {{storedData.length}}
+<br> 
+<table>
+	<tr ng-repeat='store in storedData track by $index'> 
+		<td>{{$index}}</td>
+		<td>{{store.first_name}}</td>
+		<td>{{store.last_name}}</td>
+		<td>{{store.email}}</td>
+		<td><button ng-click='removeStore($index)'>X</button></td> 
+	</tr>
+</table><br><br>
+{{storedData}} <br>
+<br>
+
+
+<script src="\node_modules\angular/angular.min.js"></script>
+<script src="/node_modules\localforage\dist/localforage.js"></script>  
+
+<script>
+
+var app = angular.module('myApp', []);
+
+app.controller('hi', function($scope, $rootScope){ 
+
+	var group = [];
+
+	$scope.save = function(name){
+
+		console.log(Date.now() + new Date().toUTCString()  );
+
+		localforage.getItem('video', function(err, value) {
+		    // Run this code once the value has been
+		    // loaded from the offline store.   
+		    group = value;
+		    console.log('group includes ' + group);
+		    group = group || [];	// initialize the group;
+		    group.push(name);  
+			console.log(name + ' will be added to Group.'); 
+			$scope.group = group;
+
+			localforage.setItem('video', group, function(){
+				console.log(group + ' has been saved to Group!');
+			}); 
+			
+		});   
+
+		$scope.name = ''; 
+
+	};	
+
+	$scope.insert = function(){
+
+		localforage.setItem('video', $scope.firebase, function(){
+			console.log('Firebase inserted successfully.')
+		});
+
+	};
+
+	localforage.getItem('video', function(err, value) {
+	    // Run this code once the value has been
+	    // loaded from the offline store.
+	    console.log('get: ' + value);   
+		$scope.storedData = value;
+	});
+
+	$scope.get = function(){ 
+
+		localforage.getItem('video', function(err, value) {
+		    // Run this code once the value has been
+		    // loaded from the offline store.
+		    console.log('get: ' + value);   
+			$scope.storedData = value;
+		});
+
+	};  
+
+	$scope.clear = function(){
+		localforage.clear('video', function(err){
+			console.log('Everything is gone.');
+		});
+	};
+
+	$scope.removeStore = function(num){ 
+
+		$scope.storedData.splice(num, 1);
+
+		console.log('num: ' + num);
+
+		console.log($scope.storedData);
+
+		$scope.clear();
+
+		localforage.setItem('video', $scope.storedData, function(){
+			console.log('Firebase inserted successfully.')
+		});
+ 
+	};
+
+	var firebase = [  
+{
+  "id": 1,
+  "first_name": "Susan",
+  "last_name": "Lawson",
+  "email": "slawson0@wix.com",
+  "gender": "Female",
+  "ip_address": "60.136.216.144"
+}, {
+  "id": 2,
+  "first_name": "Roy",
+  "last_name": "Spencer",
+  "email": "rspencer1@pcworld.com",
+  "gender": "Male",
+  "ip_address": "162.51.150.84"
+}, {
+  "id": 3,
+  "first_name": "Alan",
+  "last_name": "Ferguson",
+  "email": "aferguson2@storify.com",
+  "gender": "Male",
+  "ip_address": "168.166.157.88"
+}, {
+  "id": 4,
+  "first_name": "Jennifer",
+  "last_name": "Reyes",
+  "email": "jreyes3@yellowpages.com",
+  "gender": "Female",
+  "ip_address": "230.42.141.149"
+}, {
+  "id": 5,
+  "first_name": "Lillian",
+  "last_name": "Wallace",
+  "email": "lwallace4@google.fr",
+  "gender": "Female",
+  "ip_address": "152.131.6.74"
+}, {
+  "id": 6,
+  "first_name": "Patricia",
+  "last_name": "Oliver",
+  "email": "poliver5@mashable.com",
+  "gender": "Female",
+  "ip_address": "8.244.222.88"
+}, {
+  "id": 7,
+  "first_name": "Benjamin",
+  "last_name": "Burns",
+  "email": "bburns6@usgs.gov",
+  "gender": "Male",
+  "ip_address": "102.16.153.181"
+}, {
+  "id": 8,
+  "first_name": "Christina",
+  "last_name": "Williams",
+  "email": "cwilliams7@edublogs.org",
+  "gender": "Female",
+  "ip_address": "51.74.172.194"
+}, {
+  "id": 9,
+  "first_name": "Anthony",
+  "last_name": "Smith",
+  "email": "asmith8@nyu.edu",
+  "gender": "Male",
+  "ip_address": "126.223.54.138"
+}, {
+  "id": 10,
+  "first_name": "Kathleen",
+  "last_name": "Gray",
+  "email": "kgray9@youtu.be",
+  "gender": "Female",
+  "ip_address": "118.35.52.150"
+}, {
+  "id": 11,
+  "first_name": "Peter",
+  "last_name": "King",
+  "email": "pkinga@ycombinator.com",
+  "gender": "Male",
+  "ip_address": "211.103.179.223"
+}, {
+  "id": 12,
+  "first_name": "Ruby",
+  "last_name": "Henry",
+  "email": "rhenryb@aol.com",
+  "gender": "Female",
+  "ip_address": "229.157.159.42"
+}, {
+  "id": 13,
+  "first_name": "Jennifer",
+  "last_name": "Peters",
+  "email": "jpetersc@cocolog-nifty.com",
+  "gender": "Female",
+  "ip_address": "196.222.80.17"
+}, {
+  "id": 14,
+  "first_name": "Stephanie",
+  "last_name": "Carpenter",
+  "email": "scarpenterd@comsenz.com",
+  "gender": "Female",
+  "ip_address": "248.157.219.112"
+}, {
+  "id": 15,
+  "first_name": "Alan",
+  "last_name": "Cunningham",
+  "email": "acunninghame@godaddy.com",
+  "gender": "Male",
+  "ip_address": "19.214.98.136"
+}, {
+  "id": 16,
+  "first_name": "Lillian",
+  "last_name": "Henry",
+  "email": "lhenryf@globo.com",
+  "gender": "Female",
+  "ip_address": "238.221.1.124"
+}, {
+  "id": 17,
+  "first_name": "Anthony",
+  "last_name": "Hart",
+  "email": "ahartg@oakley.com",
+  "gender": "Male",
+  "ip_address": "234.56.70.80"
+}, {
+  "id": 18,
+  "first_name": "Christopher",
+  "last_name": "Hansen",
+  "email": "chansenh@va.gov",
+  "gender": "Male",
+  "ip_address": "95.97.84.206"
+}, {
+  "id": 19,
+  "first_name": "Jacqueline",
+  "last_name": "Carpenter",
+  "email": "jcarpenteri@hibu.com",
+  "gender": "Female",
+  "ip_address": "187.153.106.169"
+}, {
+  "id": 20,
+  "first_name": "Todd",
+  "last_name": "Mendoza",
+  "email": "tmendozaj@psu.edu",
+  "gender": "Male",
+  "ip_address": "199.202.140.127"
+}, {
+  "id": 21,
+  "first_name": "Martin",
+  "last_name": "Carr",
+  "email": "mcarrk@shareasale.com",
+  "gender": "Male",
+  "ip_address": "97.127.205.146"
+}, {
+  "id": 22,
+  "first_name": "Nancy",
+  "last_name": "Wood",
+  "email": "nwoodl@amazon.co.uk",
+  "gender": "Female",
+  "ip_address": "102.130.129.218"
+}, {
+  "id": 23,
+  "first_name": "Bobby",
+  "last_name": "Howell",
+  "email": "bhowellm@tamu.edu",
+  "gender": "Male",
+  "ip_address": "91.236.202.80"
+}, {
+  "id": 24,
+  "first_name": "Virginia",
+  "last_name": "Payne",
+  "email": "vpaynen@cafepress.com",
+  "gender": "Female",
+  "ip_address": "148.80.135.131"
+}, {
+  "id": 25,
+  "first_name": "Annie",
+  "last_name": "Sanders",
+  "email": "asanderso@parallels.com",
+  "gender": "Female",
+  "ip_address": "210.250.212.201"
+}, {
+  "id": 26,
+  "first_name": "Scott",
+  "last_name": "Wilson",
+  "email": "swilsonp@usgs.gov",
+  "gender": "Male",
+  "ip_address": "123.18.216.195"
+}, {
+  "id": 27,
+  "first_name": "Kevin",
+  "last_name": "Lopez",
+  "email": "klopezq@meetup.com",
+  "gender": "Male",
+  "ip_address": "31.114.219.116"
+}, {
+  "id": 28,
+  "first_name": "Kathy",
+  "last_name": "Gutierrez",
+  "email": "kgutierrezr@tinypic.com",
+  "gender": "Female",
+  "ip_address": "21.198.101.164"
+}, {
+  "id": 29,
+  "first_name": "Ashley",
+  "last_name": "Smith",
+  "email": "asmiths@posterous.com",
+  "gender": "Female",
+  "ip_address": "140.11.215.42"
+}, {
+  "id": 30,
+  "first_name": "Linda",
+  "last_name": "Davis",
+  "email": "ldavist@moonfruit.com",
+  "gender": "Female",
+  "ip_address": "8.74.170.144"
+}];
+
+	$scope.firebase = firebase; 
+
+});
+ 
+</script> 
+
+
+</body>
+</html>
